@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
+import CopilotDashboard from './CopilotDashboard';
 import { SectionTitle } from './components/SectionTitle';
 import { Subtitle } from './components/Subtitle';
 import { TabBar } from './components/TabBar';
@@ -40,29 +41,37 @@ const reports = [
   },
 ];
 
+
 export default function IndexPage() {
   const [search, setSearch] = useState('');
+  const [activeSection, setActiveSection] = useState('Copilot dashboard');
   const filteredReports = reports.filter(r => r.title.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div className="min-h-screen bg-gradient-to-tr from-indigo-50 via-white to-purple-50 flex flex-col" style={{fontFamily:'Segoe UI, Arial, sans-serif'}}>
       <Navbar userName="User" />
       <div className="flex flex-1 min-h-0">
-        <Sidebar />
+        <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
         <main className="flex-1 px-12 py-10 overflow-auto">
-          <SectionTitle>Reports</SectionTitle>
-          <Subtitle>A centralized collection of reports from your organization.</Subtitle>
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-7">
-            <TabBar />
-            <SearchInput value={search} onChange={setSearch} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-8 w-full max-w-[1200px] mx-auto">
-            {filteredReports.map((report, i) => (
-              <div className="flex">
-                <ReportCard key={i} {...report} onView={() => alert('View report: ' + report.title)} className="flex-1 w-full min-w-0" />
+          {activeSection === 'Copilot dashboard' ? (
+            <CopilotDashboard />
+          ) : (
+            <>
+              <SectionTitle>Reports</SectionTitle>
+              <Subtitle>A centralized collection of reports from your organization.</Subtitle>
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-7">
+                <TabBar />
+                <SearchInput value={search} onChange={setSearch} />
               </div>
-            ))}
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-8 w-full max-w-[1200px] mx-auto">
+                {filteredReports.map((report, i) => (
+                  <div className="flex" key={i}>
+                    <ReportCard {...report} onView={() => alert('View report: ' + report.title)} className="flex-1 w-full min-w-0" />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </main>
       </div>
     </div>
