@@ -1,9 +1,22 @@
 
+import React, { useState } from "react";
 import DonutChart from "./components/DonutChart";
 import BarChart from "./components/BarChart";
 import InfoCard from "./components/InfoCard";
+import Modal from "./components/Modal";
+import AdoptionGraph from "./components/AdoptionGraph";
 
 const CopilotDashboard = () => {
+  const [isAdoptionModalOpen, setIsAdoptionModalOpen] = useState(false);
+
+  const handleExploreAdoption = () => {
+    setIsAdoptionModalOpen(true);
+  };
+
+  const closeAdoptionModal = () => {
+    setIsAdoptionModalOpen(false);
+  };
+
   return (
     <div className="bg-[#f6f8fa] min-h-screen p-8">
       {/* Header */}
@@ -77,7 +90,12 @@ const CopilotDashboard = () => {
         </div>
         {/* Explore adoption button */}
         <div className="flex flex-col justify-end">
-          <button className="border border-gray-300 rounded px-4 py-2 text-sm font-medium bg-white hover:bg-gray-50">Explore adoption</button>
+          <button 
+            onClick={handleExploreAdoption}
+            className="border border-gray-300 rounded px-4 py-2 text-sm font-medium bg-white hover:bg-gray-50 transition-colors"
+          >
+            Explore adoption
+          </button>
         </div>
       </div>
       {/* Value Cards Section */}
@@ -92,7 +110,7 @@ const CopilotDashboard = () => {
             research="It’s 3.8 times faster to summarize a meeting with Copilot than without Copilot."
           />
           <InfoCard
-            title="Emails"
+            title="Emails (in the last 30 days window)"
             value="37,246"
             subtitle="Outlook email users"
             research="64% of Outlook users say Copilot allows them to spend less time processing email."
@@ -105,6 +123,15 @@ const CopilotDashboard = () => {
           />
         </div>
       </div>
+
+      {/* Adoption Modal */}
+      <Modal
+        isOpen={isAdoptionModalOpen}
+        onClose={closeAdoptionModal}
+        title="Copilot Adoption Analysis"
+      >
+        <AdoptionGraph />
+      </Modal>
     </div>
   );
 };
